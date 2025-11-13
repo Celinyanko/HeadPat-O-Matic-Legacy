@@ -19,17 +19,17 @@ TODO:
 
 ## How to add multiple actions
 
-Currently this add-on does not feature multiple-action support (TODO!) but you can duplicate your mod and modify the following lines to add more actions:
+Currently this add-on does not feature multiple-action support (TODO!) but you can duplicate your mod and modify the following lines to add more actions
 
-  Button
+Button:
 * `buttonId` (required! one ID per button!)
 * `buttonText` (so you know what you're clicking)
-* `topOffset` (so the button doesnt stack)
+* `topOffset` (important! so the button doesnt stack)
 
-  Action
+Action:
 * `focusGroupName` (as required for the action)
 * `activityName` (as required)
 
-  Flavour Text:
+Flavour Text:
 * `permissionsError` (as required)
 * `boundUpError` (as required)
