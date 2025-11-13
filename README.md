@@ -1,6 +1,5 @@
 # HeadPat-O-Matic-Legacy
-A silly monkey injector script for BC that adds a button which performs an action on everyone within interaction range
-It obeys
+A silly monkey injector script for BC that adds a button which performs an action on everyone as as available. It obeys:
 * interaction permission (e.g. user setting e.g. whitelist+)
 * action permission (do they hate headpats?)
 * range check (if on a map)
