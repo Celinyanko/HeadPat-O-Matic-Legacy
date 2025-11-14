@@ -13,6 +13,8 @@ TODO:
 - iterate through new actions and generate new buttons as needed
 - more customisable flavour text pool instead of having to edit the code directly
 - single-target single actions (e.g. if you interact with someone, you shouldn't throw the action for the entire room)
+- split file into multiple files
+- autoupdater (hopefully i dont break shit while people use it!)
 
 [One click install](https://github.com/Celinyanko/HeadPat-O-Matic-Legacy/raw/refs/heads/main/HeadPat-O-Matic.user.js) for your monkey injector (This is NOT self updating!)
 
@@ -32,3 +34,9 @@ Action:
 Flavour Text:
 * `permissionsError` (as required)
 * `boundUpError` (as required)
+
+___
+
+Known Issues:
+* Blocked check doesn't work with gags?
+* decode ActivityAsset for item interactions
