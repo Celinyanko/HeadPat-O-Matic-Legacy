@@ -6,7 +6,7 @@
 // ==UserScript==
 // @name         HeadPat-O-Matic (Legacy)
 // @namespace    Celinyanko
-// @version      0.1
+// @version      0.1a
 // @description  A BCAR-style compact button to perform activity on everyone in room, with all configs centralized
 // @author       Celiko, Likolisu
 // @include      /^https:\/\/(www\.)?bondageprojects\.elementfx\.com\/R\d+\/(BondageClub|\d+)(\/((index|\d+)\.html)?)?$/
@@ -21,26 +21,33 @@ var bcModSdk=function(){"use strict";const o="1.2.0";function e(o){alert("Mod ER
 
 (function () {
   const modApi = bcModSdk.registerMod({
+    //change name as required when duplicating
     name: "HeadPat-O-Matic",
     fullName: "HeadPat-O-Matic",
     version: "0.1 Now with Item Perms, map distance and actions respect!",
     repository: ` https://github.com/Celinyanko/HeadPat-O-Matic-Legacy/`,
   });
   ("use strict");
+
+  //change name as required when duplicating
   if (window.PatAllLegacyButtonLoaded) return;
   window.PatAllLegacyButtonLoaded = true;
 
-  // === 🔧 Global Settings, change as required ===
-  const buttonId = "patAll2";//Rename this if duplicating
-  const buttonText = "PAT";
+  // === 🔧 Global Settings ===
+  //change these as required when duplicating
+  const buttonNumber = 0;
+  const buttonId = `headpatOMaticButton${buttonNumber}`;//Rename this if duplicating
+  const buttonText = "🫳";
+  const focusGroupName = "ItemHead";
+  const activityName = "Pet"; // action name string（ Pet、Slap ）- WARNING: MAY BREAK IN R122!!!
+
   const buttonSize = 24;
-  const topOffset = `calc(66.6% - ${buttonSize / 2}px - 36px)`; // Button location: Lower left side, slightly below center
-  const buttonColor = "#ffccd5"; //background colour
+  const topOffset = `calc(50% - ${buttonSize}px - ${buttonNumber * buttonSize}px)`; // Button location: Lower left side, slightly below center
+  const buttonColor = "#302010"; //background colour
+  const textColor = "#ffccd5";
   const checkInterval = 1000; // how often to check if we're actually in a chatroom to draw button
 
   const delayTime = 500; // delay between actioning against chatroom members
-  const focusGroupName = "ItemHead";
-  const activityName = "Pet"; // action name string（ Pet、Slap ）- WARNING: MAY BREAK IN R122!!!
 
   // === 💡 action delay ===
   function delay(ms) {
@@ -78,11 +85,11 @@ var bcModSdk=function(){"use strict";const o="1.2.0";function e(o){alert("Mod ER
       width: `${buttonSize}px`,
       height: `${buttonSize}px`,
       backgroundColor: buttonColor,
+      color: textColor,
       border: "1px solid #888",
       borderRadius: "0px",
       fontSize: "9px",
       fontWeight: "bold",
-      color: "#000",
       textAlign: "center",
       lineHeight: "24px",
       whiteSpace: "nowrap",
@@ -102,9 +109,12 @@ var bcModSdk=function(){"use strict";const o="1.2.0";function e(o){alert("Mod ER
 
             //change as required
             const permissionsError = [
-              {Tag: "Beep",Text: `${CharacterNickname(Player)} was about to headpat ${CharacterNickname(C)} but decided not to because of their magical barrier.`,},
+              {Tag: "Beep",Text: `${CharacterNickname(Player)} was about to headpat ${CharacterNickname(C)} but decided not.`,},
               {Tag: "Beep",Text: `${CharacterNickname(Player)} had thoughts of headpatting ${CharacterNickname(C)} but shied away`,},
               {Tag: "Beep",Text: `${CharacterNickname(C)}'s A.T. Field proved to be too powerful for ${CharacterNickname(Player)}'s terrible attempt at headpatting`,},
+              {Tag: "Beep",Text: `${CharacterNickname(C)}'s magical defenses proved to be too inpenetrable for ${CharacterNickname(Player)}'s wishes to headpat them'`,},
+              {Tag: "Beep",Text: `${CharacterNickname(C)} dodged ${CharacterNickname(Player)}'s headpat`,},
+              {Tag: "Beep",Text: `${CharacterNickname(C)}'s evasion skill was too high for ${CharacterNickname(Player)}'s accuracy`,},
             ];
             const permissionsErrorLength = permissionsError.length;
 
@@ -113,7 +123,7 @@ var bcModSdk=function(){"use strict";const o="1.2.0";function e(o){alert("Mod ER
             let activityPermissionCheck = ActivityCanBeDone(C,`${activityName}`,`${focusGroupName}`);//e.g. do they hate headpats?
             let activitySlotNotBlockedCheck = ActivityPossibleOnGroup(C,`${focusGroupName}`)//slot is not blocked (e.g. in a crate)
 
-            let randomDeny = randSeed * permissionsError.length;
+            let randomDeny = randSeed * permissionsErrorLength;
 
             if (C.MemberNumber !== Player.MemberNumber) {
               if (activityDistanceBlocked === false && activitySlotNotBlockedCheck === true)
@@ -147,6 +157,10 @@ var bcModSdk=function(){"use strict";const o="1.2.0";function e(o){alert("Mod ER
             {Tag: "Beep",Text: `${CharacterNickname(Player)} tried to extend their limbs but struggles in their bondage`,},
             {Tag: "Beep",Text: `${CharacterNickname(Player)} had various thoughts of headpatting the room members but is physically incapable of doing so`,},
             {Tag: "Beep",Text: `${CharacterNickname(Player)} whimpers in their predicament`,},
+            {Tag: "Beep",Text: `Squeeks and ruffling can be heard from ${CharacterNickname(Player)}'s general direction'`,},
+            {Tag: "Beep",Text: `${CharacterNickname(Player)} could only imagine petting the room's occupants`,},
+            {Tag: "Beep",Text: `Cute sounds emerge from ${CharacterNickname(Player)}`,},
+            {Tag: "Beep",Text: `${CharacterNickname(Player)}'s evasion skill seems a little inadequate`,},
           ];
 
           const dict = boundUpError[Math.floor(randSeed * boundUpError.length)];
