@@ -84,6 +84,7 @@
       height: `${buttonSize}px`,
       backgroundColor: buttonColor,
       color: textColor,
+      opacity: 0.75,
       border: "1px solid #888",
       borderRadius: "0px",
       fontSize: "9px",
@@ -144,8 +145,8 @@
                 }
                 //else return nothing if we're too far in a map so we don't spam the chatroom, but you can technically spit out a message "but failed to reach XYZ!"
                 //TODO if not lazy: custom one-fits-all flavour text for blocked slot
+                await delay(delayTime);
               }
-              await delay(delayTime);
             }
           }
         }
