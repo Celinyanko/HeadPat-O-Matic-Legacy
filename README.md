@@ -23,9 +23,8 @@ TODO:
 Currently this add-on does not feature multiple-action support (TODO!) but you can duplicate your mod and modify the following lines to add more actions
 
 Button:
-* `buttonId` (required! one ID per button!)
+* `buttonNumber` (required! one number per button!)
 * `buttonText` (so you know what you're clicking)
-* `topOffset` (important! so the button doesnt stack)
 
 Action:
 * `focusGroupName` (as required for the action)
