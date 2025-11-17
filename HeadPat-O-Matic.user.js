@@ -6,7 +6,7 @@
 // ==UserScript==
 // @name         HeadPat-O-Matic (Legacy) (v3)
 // @namespace    Celinyanko
-// @version      0.3
+// @version      0.3b
 // @description  A BCAR-style compact button to perform activity on everyone in room, with all configs centralized
 // @author       Celiko, Likolisu, Kanon
 // @include      /^https:\/\/(www\.)?bondageprojects\.elementfx\.com\/R\d+\/(BondageClub|\d+)(\/((index|\d+)\.html)?)?$/
@@ -19,14 +19,14 @@
 
 (function () {
   function loadStupidButton() {
-    const version = 0.3;
+    const version = "0.3b";
     const purpose = "Headpat"; // change as required
     const duplicateCheck = `Headpat-O-Matic_v${version}_${purpose}`;
 
     const modApi = bcModSdk.registerMod({
-      name: "HeadPat-O-Matic",
-      fullName: "HeadPat-O-Matic",
-      version: version.toString() + "(" + purpose + ")",
+      name: `HeadPat-O-Matic - ${purpose}`,
+      fullName: `HeadPat-O-Matic - ${purpose}`,
+      version: version.toString(),
       repository: ` https://github.com/Celinyanko/HeadPat-O-Matic-Legacy/`,
     });
     ("use strict");
@@ -93,12 +93,9 @@
     }
 
 
-    const activity = { Activity: ActivityFemale3DCG.find(e => e.Name === activityName) }; // kind of bullshit
+    const activity = { Activity: ActivityFemale3DCG.find(e => e.Name === activityName) }; // kind of bullshit, returns undefined if you sanity check it in onclick
 
-    // fuck off with that undefined bullshit
-    function targetGroup() {
-      return AssetGroup.find(e => e.Name === focusGroupName);
-    }
+    let targetGroup = null;
 
     // === 💡 action delay ===
     function delay(ms) {
@@ -148,6 +145,8 @@
       btn.onclick = async () => {
         if (typeof ChatRoomCharacter === "undefined" && !Array.isArray(ChatRoomCharacter)) return;
 
+        if (!targetGroup) targetGroup = AssetGroup.find(e => e.Name === focusGroupName);
+
         if (Player.CanInteract()) {
           for (const C of ChatRoomCharacter.filter((C) => C != Player)) {
             if (!isTargetReachable(C)) continue;
@@ -156,7 +155,7 @@
 
             if (isActivityAllowed(C)) {
               // TODO: different error message for each permission type failure
-              ActivityRun(Player, C, targetGroup(), activity);
+              ActivityRun(Player, C, targetGroup, activity);
               continue;
             }
 
@@ -217,13 +216,13 @@
   function waitToLoad()
   {
     // fucking save me
-    if(typeof AssetGroup !== 'undefined' && Array.isArray(AssetGroup) && ChatRoomCharacterViewIsActive() === true) {
+    if(typeof Player?.MemberNumber === "number" && typeof ServerSend === "function" && typeof ChatRoomSendLocal === "function") {
       loadStupidButton();
 
     } else {
       console.log("[HEADPAT-O-MATIC]: Waiting for AssetGroup to exist... ");
 
-      setTimeout(waitToLoad, 3000);
+      setTimeout(waitToLoad, 5000);
     }
   }
 
