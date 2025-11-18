@@ -6,7 +6,7 @@
 // ==UserScript==
 // @name         HeadPat-O-Matic (Legacy) (v3)
 // @namespace    Celinyanko
-// @version      0.3b
+// @version      0.3d
 // @description  A BCAR-style compact button to perform activity on everyone in room, with all configs centralized
 // @author       Celiko, Likolisu, Kanon
 // @include      /^https:\/\/(www\.)?bondageprojects\.elementfx\.com\/R\d+\/(BondageClub|\d+)(\/((index|\d+)\.html)?)?$/
@@ -19,7 +19,7 @@
 
 (function () {
   function loadStupidButton() {
-    const version = "0.3b";
+    const version = "0.3d";
     const purpose = "Headpat"; // change as required
     const duplicateCheck = `Headpat-O-Matic_v${version}_${purpose}`;
 
@@ -55,22 +55,46 @@
 
     // Struggle/Permission blocked dialogues: Change as required
     const permissionErrorStrings = [
-      "$SOURCE was about to headpat $TARGET but decided not.",
+      "$SOURCE was about to headpat $TARGET but decided not to.",
       "$SOURCE had thoughts of headpatting $TARGET but shied away.",
       "$TARGET's A.T. Field proved to be too powerful for $SOURCE's terrible attempt at headpatting.",
       "$TARGET's magical defenses proved to be too inpenetrable for $SOURCE's wishes to headpat them.",
       "$TARGET dodged $SOURCE's headpat.",
       "$TARGET's evasion skill was too high for $SOURCE's accuracy.",
+      "$TARGET's superior energy deterred $SOURCE's motivation from headpatting them.",
+      "$TARGET unconsciously tilted their head away, causing $SOURCE's intended headpat to miss its mark.",
+      "$SOURCE received an immediate system error notification as their hand approached $TARGET's hair.",
+      "A faint, ethereal shield briefly shimmered around $TARGET, repelling $SOURCE's gentle advance.",
+      "$SOURCE felt a strange static discharge as their fingers brushed the edge of $TARGET's personal space.",
+      `$TARGET's aura projected a stern "Do Not Touch" sign that $SOURCE reluctantly obeyed.`,
+      "$SOURCE's momentum fizzled out as their urge to pat $TARGET nullified by an external restriction.",
+      "The proximity sensor of $TARGET's head registered $SOURCE's intent and deployed an automated defense mechanism.",
+      "$SOURCE's attempted headpat was intercepted by a silent, invisible firewall installed around $TARGET.",
+      "$SOURCE's hand stopped mid-air, halted by an invisible barrier protecting $TARGET.",
+      "$SOURCE stumbled over something incoherent.",
     ];
 
     const boundUpErrorStrings = [
       "$SOURCE tried to extend their limbs but struggles in their bondage.",
-      "$SOURCE had various thoughts of headpatting the room members but is physically incapable of doing so.",
+      "$SOURCE had various thoughts of headpats but is currently physically incapable of doing anything.",
       "$SOURCE whimpers in their predicament.",
       "Squeeks and ruffling can be heard from $SOURCE's general direction.",
       "$SOURCE could only imagine petting the room's occupants.",
       "Cute sounds emerge from $SOURCE.",
       "$SOURCE's evasion skill seems a little inadequate.",
+      "$SOURCE struggles in their binds.",
+      "$SOURCE's thoughts of headpatting are shut down by their bondage.",
+      "$SOURCE's limbs were pinned tightly, making any movement beyond a wiggle impossible.",
+      "The bondage around $SOURCE makes squishy noises, preventing them from delivering a simple headpat.",
+      "A soft grunt of frustration escaped $SOURCE as they tested the limits of their restraints.",
+      "$SOURCE could only rock slightly, their desperate attempts at motion failing to loosen the bindings.",
+      "Muffled pleas for freedom and the opportunity to headpat came from $SOURCE's direction.",
+      "$SOURCE resignedly gave up, letting their body slump against their restraints.",
+      "The only sign of $SOURCE's desire to pat was the strained twitching of their shoulders.",
+      "$SOURCE mentally simulated the act of headpatting, since they couldn't execute it physically.",
+      "Every failed struggle only tightened the bonds restricting $SOURCE's movement.",
+      "$SOURCE tried to plead with their eyes, hoping someone would understand their urgent need to deliver a headpat.",
+      "$SOURCE squirms.",
     ];
 
     const errors = new Map([
@@ -142,21 +166,26 @@
         display: "none",
       });
 
+      function otherCharacterExists() {
+        return CurrentCharacter && CurrentCharacter !== "undefined" && !Array.isArray(CurrentCharacter);
+      }
+
       btn.onclick = async () => {
+
         if (typeof ChatRoomCharacter === "undefined" && !Array.isArray(ChatRoomCharacter)) return;
 
         if (!targetGroup) targetGroup = AssetGroup.find(e => e.Name === focusGroupName);
 
         if (Player.CanInteract()) {
-          for (const C of ChatRoomCharacter.filter((C) => C != Player)) {
-            if (!isTargetReachable(C)) continue;
 
-            await delay(delayTime);
+          function doSillyAction(C) {
+
+            if (!isTargetReachable(C)) return;
 
             if (isActivityAllowed(C)) {
-              // TODO: different error message for each permission type failure
+            // TODO: different error message for each permission type failure
               ActivityRun(Player, C, targetGroup, activity);
-              continue;
+              return;
             }
 
             const permissionErrorString = randomErrorString("permission", C);
@@ -170,10 +199,22 @@
               Type: "Action",
               Dictionary: [dict],
             };
+
             ServerSend("ChatRoomChat", obj);
             console.log("ChatRoomChat", obj);
 
             // TODO if not lazy: custom one-fits-all flavour text for blocked slot
+          }
+
+          if (otherCharacterExists()) {
+            const C = CurrentCharacter;
+            doSillyAction(C);
+            return;
+          }
+
+          for (const C of ChatRoomCharacter.filter((C) => C != Player)) {
+            doSillyAction(C);
+            await delay(delayTime);
           }
 
           return;
@@ -220,7 +261,7 @@
       loadStupidButton();
 
     } else {
-      console.log("[HEADPAT-O-MATIC]: Waiting for AssetGroup to exist... ");
+      console.log("[HEADPAT-O-MATIC]: Waiting to join a room load... ");
 
       setTimeout(waitToLoad, 5000);
     }
