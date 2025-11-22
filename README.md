@@ -1,5 +1,5 @@
 # HeadPat-O-Matic-Legacy
-A silly monkey injector script for BC that adds a button which performs an action on everyone as as available. It obeys:
+A silly monkey injector script for BC that adds a button which performs an action on either everyone it can in the room or on a single individual if an individual is targetted. This button obeys:
 * interaction permission (e.g. user setting e.g. whitelist+)
 * action permission (do they hate headpats?)
 * range check (if on a map)
@@ -14,6 +14,7 @@ TODO:
 - more customisable flavour text pool instead of having to edit the code directly
 - single-target single actions (e.g. if you interact with someone, you shouldn't throw the action for the entire room)
 - split file into multiple files
+- hook onto CurrentCharacter state to change appearance of button to indicate targetted behavioour
 - autoupdater (hopefully i dont break shit while people use it!)
 
 [One click install](https://github.com/Celinyanko/HeadPat-O-Matic-Legacy/raw/refs/heads/main/HeadPat-O-Matic.user.js) for your monkey injector (This is NOT self updating!)
@@ -37,5 +38,11 @@ Flavour Text:
 ___
 
 Known Issues:
-* Blocked check doesn't work with gags?
+* Blocked check doesn't work with gags? - Can use CanSpeak() check for such cases
 * decode ActivityAsset for item interactions
+* Checks for "disliked" action not checked (forbidden actions are checked however). I don't think there is a function that provides this information publically to other players.
+
+___
+
+Non-issue behaviours:
+* Checks skips over those who have arousals disabled as if their interaction zone is inaccessible. In such cases, no error flavour text is provided. I don't think there is a way to get around this non-issue, nor is there any good reason to
